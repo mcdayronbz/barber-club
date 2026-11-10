@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BARBER CLUB - Loyalty App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: #ffffff; }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .caramel-glow {
+      box-shadow: 0 0 25px rgba(200, 16, 46, 0.45);
+    }
+    .stamp-glow {
+      box-shadow: 0 0 15px rgba(200, 16, 46, 0.6);
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen p-0 sm:p-4 bg-black">
+
+  <!-- Mobile Frame Container -->
+  <div class="w-full max-w-md h-[100vh] sm:h-[844px] bg-[#0A0A0C] sm:rounded-[40px] overflow-hidden flex flex-col justify-between relative border border-white/10 shadow-2xl">
+    
+    <!-- Background Ambient Lights -->
+    <div class="absolute -top-20 -left-20 w-60 h-60 bg-[#C8102E]/20 rounded-full blur-[80px] pointer-events-none"></div>
+    <div class="absolute top-1/2 -right-20 w-60 h-60 bg-[#C8102E]/15 rounded-full blur-[90px] pointer-events-none"></div>
+
+    <!-- APP HEADER -->
+    <header class="px-6 pt-6 pb-4 flex justify-between items-center z-10 glass-panel border-b border-white/5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C8102E] to-red-900 flex items-center justify-center font-extrabold text-lg tracking-wider text-white shadow-lg shadow-[#C8102E]/30">
+          BC
+        </div>
+        <div>
+          <h1 class="font-extrabold text-base tracking-wider uppercase leading-none text-white">BARBER<span class="text-[#C8102E]">CLUB</span></h1>
+          <p class="text-[10px] text-gray-400 font-medium">VIP Loyalty Card</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#C8102E]/20 text-[#C8102E] border border-[#C8102E]/40">
+          NIVEL GOLD
+        </span>
+      </div>
+    </header>
+
+    <!-- MAIN SCROLLABLE CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto px-5 py-4 z-10 space-y-5">
+
+      <!-- WELCOME / PROFILE CARD -->
+      <div class="glass-card rounded-2xl p-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-[#C8102E]">
+            <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#0A0A0C]"></div>
+          </div>
+          <div>
+            <h2 class="font-bold text-sm text-white">Carlos Mendoza</h2>
+            <p class="text-xs text-gray-400">carlos.mendoza@email.com</p>
+          </div>
+        </div>
+        <button onclick="toggleQRModal()" class="w-10 h-10 rounded-xl glass-panel flex items-center justify-center text-white hover:border-[#C8102E] transition-all">
+          <i class="fa-solid fa-qrcode text-lg text-[#C8102E]"></i>
+        </button>
+      </div>
+
+      <!-- LOYALTY CARD GRID (THE MAIN FEATURE) -->
+      <div class="glass-card rounded-3xl p-5 relative overflow-hidden border border-white/10">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h3 class="font-bold text-base text-white">Tarjeta de Sellos</h3>
+            <p class="text-xs text-gray-400">Completa 10 visitas y tu próximo corte es GRATIS</p>
+          </div>
+          <span id="stampCount" class="text-xs font-extrabold px-3 py-1 rounded-full bg-[#C8102E] text-white caramel-glow">
+            6 / 10
+          </span>
+        </div>
+
+        <!-- 10 Stamps Grid -->
+        <div class="grid grid-cols-5 gap-3 my-2" id="stampsGrid">
+          <!-- Stamps will be injected dynamically by JavaScript -->
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="mt-4 pt-3 border-t border-white/5">
+          <div class="flex justify-between text-[11px] text-gray-400 mb-1.5 font-medium">
+            <span>Progreso del premio</span>
+            <span id="progressPercent" class="text-[#C8102E] font-bold">60%</span>
+          </div>
+          <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-red-800 to-[#C8102E] rounded-full transition-all duration-500" style="width: 60%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIMULATOR CONTROL (DEMO FEATURE FOR RECORDING) -->
+      <div class="glass-panel rounded-2xl p-3 flex items-center justify-between border border-[#C8102E]/30 bg-[#C8102E]/5">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-[#C8102E] text-sm"></i>
+          <span class="text-xs font-semibold text-gray-200">Demostración en vivo:</span>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="addStamp()" class="px-3 py-1.5 rounded-xl bg-[#C8102E] text-white text-xs font-bold hover:bg-red-700 transition-all shadow-md">
+            +1 Corte
+          </button>
+          <button onclick="resetStamps()" class="px-2.5 py-1.5 rounded-xl glass-panel text-gray-400 text-xs hover:text-white transition-all">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- VISIT HISTORY LIST -->
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-[#C8102E]"></i> Historial de Visitas
+          </h3>
+          <span class="text-[11px] text-gray-400">Últimos registros</span>
+        </div>
+
+        <div class="space-y-2">
+          <!-- Item 1 -->
+          <div class="glass-panel rounded-xl p-3 flex items-center justify-between border-l-4 border-l-[#C8102E]">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-[#C8102E]">
+                <i class="fa-solid fa-[#0A0A0C] fa-scissors"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-xs text-white">Corte Preferencial + Barba</h4>
+                <p class="text-[10px] text-gray-400">Atendido por: Mateo Barber</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-white block">05 Nov 2026</span>
+              <span class="text-[10px] text-emerald-400 font-medium">16:45 PM</span>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="glass-panel rounded-xl p-3 flex items-center justify-between border-l-4 border-l-white/20">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400">
+                <i class="fa-solid fa-scissors"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-xs text-white">Corte Clásico & Fade</h4>
+                <p class="text-[10px] text-gray-400">Atendido por: Alex Stylist</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-white block">22 Oct 2026</span>
+              <span class="text-[10px] text-gray-400 font-medium">18:15 PM</span>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="glass-panel rounded-xl p-3 flex items-center justify-between border-l-4 border-l-white/20">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400">
+                <i class="fa-solid fa-scissors"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-xs text-white">Perfilado de Barba & Exfoliación</h4>
+                <p class="text-[10px] text-gray-400">Atendido por: Mateo Barber</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-white block">08 Oct 2026</span>
+              <span class="text-[10px] text-gray-400 font-medium">15:30 PM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- BOTTOM NAVBAR -->
+    <nav class="glass-panel px-6 py-3 flex justify-between items-center z-10 border-t border-white/5">
+      <button class="flex flex-col items-center gap-1 text-[#C8102E]">
+        <i class="fa-solid fa-id-card text-lg"></i>
+        <span class="text-[10px] font-bold">Tarjeta</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-gray-500 hover:text-white transition-all">
+        <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+        <span class="text-[10px] font-medium">Historial</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-gray-500 hover:text-white transition-all">
+        <i class="fa-solid fa-gift text-lg"></i>
+        <span class="text-[10px] font-medium">Premios</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-gray-500 hover:text-white transition-all">
+        <i class="fa-solid fa-user text-lg"></i>
+        <span class="text-[10px] font-medium">Perfil</span>
+      </button>
+    </nav>
+
+    <!-- QR CODE MODAL (POPUP) -->
+    <div id="qrModal" class="absolute inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-6 hidden">
+      <div class="glass-card w-full max-w-xs rounded-3xl p-6 text-center relative border border-white/15">
+        <button onclick="toggleQRModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full glass-panel flex items-center justify-center text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        
+        <h3 class="font-extrabold text-base text-white mb-1">Tu Código Cliente</h3>
+        <p class="text-xs text-gray-400 mb-5">Muéstralo en caja para registrar tu corte</p>
+
+        <div class="bg-white p-4 rounded-2xl inline-block mb-4 shadow-xl">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=CLIENTE_CARLOS_MENDOZA_102938&color=050505" alt="QR Code" class="w-44 h-44">
+        </div>
+
+        <p class="text-[11px] font-mono text-[#C8102E] bg-[#C8102E]/10 py-1.5 px-3 rounded-full inline-block border border-[#C8102E]/30">
+          ID: VIP-8849-COL
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentStamps = 6;
+    const totalStamps = 10;
+
+    function renderStamps() {
+      const grid = document.getElementById('stampsGrid');
+      grid.innerHTML = '';
+
+      for (let i = 1; i <= totalStamps; i++) {
+        const isStamped = i <= currentStamps;
+        const isReward = i === totalStamps;
+
+        const stampEl = document.createElement('div');
+        stampEl.className = `aspect-square rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 ${
+          isStamped 
+            ? 'bg-gradient-to-br from-[#C8102E] to-red-900 border border-red-400/30 stamp-glow text-white scale-[1.02]' 
+            : isReward 
+              ? 'bg-amber-500/10 border-2 border-dashed border-amber-500/50 text-amber-500' 
+              : 'bg-white/5 border border-white/5 text-gray-600'
+        }`;
+
+        if (isStamped) {
+          stampEl.innerHTML = `
+            <i class="fa-solid fa-scissors text-lg"></i>
+            <span class="text-[9px] font-bold mt-1 opacity-80">#${i}</span>
+          `;
+        } else if (isReward) {
+          stampEl.innerHTML = `
+            <i class="fa-solid fa-crown text-lg animate-pulse"></i>
+            <span class="text-[8px] font-black uppercase mt-1">FREE</span>
+          `;
+        } else {
+          stampEl.innerHTML = `
+            <span class="text-xs font-bold opacity-40">${i}</span>
+          `;
+        }
+
+        grid.appendChild(stampEl);
+      }
+
+      // Update Header & Progress
+      document.getElementById('stampCount').innerText = `${currentStamps} / ${totalStamps}`;
+      const percent = (currentStamps / totalStamps) * 100;
+      document.getElementById('progressPercent').innerText = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+
+    function addStamp() {
+      if (currentStamps < totalStamps) {
+        currentStamps++;
+        renderStamps();
+      } else {
+        alert("🎉 ¡Felicidades! Has completado los 10 cortes. Reclama tu corte gratis en caja.");
+      }
+    }
+
+    function resetStamps() {
+      currentStamps = 0;
+      renderStamps();
+    }
+
+    function toggleQRModal() {
+      const modal = document.getElementById('qrModal');
+      modal.classList.toggle('hidden');
+    }
+
+    // Initial render
+    renderStamps();
+  </script>
+</body>
+</html>
